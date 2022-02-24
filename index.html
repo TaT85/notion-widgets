@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=GFS+Didot&display=swap">
+    <title>COUNTER</title>
+    <style>
+
+h2 {
+  color:#37352f;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0px 0px 5px;
+  font-family: 'GFS Didot', serif;
+  font-size: 1em;
+}
+
+.weeks, .days, .hours {
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  padding: 14px;
+  border-radius: 6px;
+}
+
+.weeks {
+  background: #FDEBEC;
+}
+
+.days {
+  background: #FAECDD;
+}
+
+.hours {
+  background: #FBF3DB;
+}
+
+#timer {
+  color: #37352f;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .6em;
+  letter-spacing: 3px;
+}
+
+.numbers {
+  font-family: 'GFS Didot', serif;
+  color: #37352f;
+  font-size: 3.3em;
+}
+
+    </style>
+</head>
+<body>
+
+<h2>s p r i n g&nbsp;&nbsp;&nbsp;b r e a k</h2>
+
+<div id="timer">
+
+    <div class="weeks">
+        <div id="weeks" class="numbers "> </div></div>
+      <div class="days">
+        <div id="days" class="numbers"> </div></div>
+      <div class="hours">
+        <div id="hours" class="numbers"> </div></div>
+      </div>
+
+</div>
+
+</body>
+<script>
+    const year = new Date().getFullYear();
+const myDate = new Date('Mar 3, 2022 02:11:35');
+console.log(myDate);
+
+// Jan, Feb, Mar, ...
+const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31];
+const cumulMonth = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+
+function toDay(year, month, day) {
+  let leap = 0;
+  if (year % 4 == 0)
+    leap = 1;
+  return cumulMonth[month] + day + leap;
+}
+
+var setText = 0; // 0: not set, 1: set hours, 2: set months
+var weekChild;
+var dayChild;
+var hourChild;
+
+// countdown
+let timer = setInterval(function() {
+
+  // get today's date
+  var curDate = new Date();
+  const year = curDate.getYear();
+  const month = curDate.getMonth();
+  const day = curDate.getDate();
+  const hour = curDate.getHours();
+  const totDate = toDay(year, month, day);
+
+  const targetYear = myDate.getYear();
+  const targetMonth = myDate.getMonth();
+  const targetDay = myDate.getDate();
+  const targetHours = myDate.getHours();
+  const targetTotDate = toDay(targetYear, targetMonth, targetDay);
+
+  // get the difference
+  const diff = myDate - curDate.getTime();
+
+  // math
+  let months = 0;
+  let weeks = 0;
+  let days = Math.floor((diff % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+  let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  let monthStr = document.createTextNode("months");
+  let weekStr = document.createTextNode("weeks");
+  let dayStr = document.createTextNode("days");
+  let hourStr = document.createTextNode("hours");
+
+  if (diff / 1000 / 60 / 60 / 24 < 7) { // Any assignment under a week uses hours display
+    // display
+    if (setText == 2) {
+      weekChild.parentElement.replaceChild(document.createTextNode("weeks"), weekChild);
+      dayChild.parentElement.replaceChild(document.createTextNode("days"), dayChild);
+      hourChild.parentElement.replaceChild(document.createTextNode("hours"), hourChild);
+      setText = 1;
+    }
+    else if (setText == 0) {
+      document.getElementById("weeks").parentElement.appendChild(weekStr);
+      document.getElementById("days").parentElement.appendChild(dayStr);
+      document.getElementById("hours").parentElement.appendChild(hourStr);
+      setText = 1;
+    }
+    document.getElementById("weeks").innerHTML=weeks;
+    document.getElementById("days").innerHTML=days;
+    document.getElementById("hours").innerHTML=hours;
+  }
+  else {
+    if (setText != 2) {
+      weekChild = document.getElementById("weeks").parentElement.appendChild(monthStr);
+      dayChild = document.getElementById("days").parentElement.appendChild(weekStr);
+      hourChild = document.getElementById("hours").parentElement.appendChild(dayStr);
+      setText = 2;
+    }
+    if (targetDay > day) {
+      months = targetMonth - month;
+      weeks = parseInt((targetDay - day) / 7);
+      days = (targetDay - day) % 7;
+    }
+    else {
+      months = targetMonth - month - 1;
+      weeks = parseInt((targetTotDate - totDate) / 7);
+      days = (targetTotDate - totDate) % 7;
+    }
+
+    document.getElementById("weeks").innerHTML=months;
+    document.getElementById("days").innerHTML=weeks;
+    document.getElementById("hours").innerHTML=days;
+  }
+
+
+  
+}, 1);
+
+</script>
+</html>
