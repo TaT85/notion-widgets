@@ -55,7 +55,7 @@ h2 {
 </head>
 <body>
 
-<h2>e n d&nbsp;&nbsp;&nbsp;o f&nbsp;&nbsp;&nbsp;s e m e s t e r</h2>
+<h2>E n d&nbsp;&nbsp;&nbsp;o f&nbsp;&nbsp;&nbsp;S e m e s t e r</h2>
 
 <div id="timer">
 
@@ -122,7 +122,7 @@ let timer = setInterval(function() {
   let dayStr = document.createTextNode("days");
   let hourStr = document.createTextNode("hours");
 
-  if (diff / 1000 / 60 / 60 / 24 <= 7) { // Any assignment under a week uses hours display
+  if (diff / 1000 / 60 / 60 / 24 < 7) { // Any assignment under a week uses hours display
     // display
     if (setText == 2) {
       weekChild.parentElement.replaceChild(document.createTextNode("weeks"), weekChild);
