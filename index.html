@@ -15,7 +15,7 @@
       font-size: 1em;
     }
 
-    .months, .weeks, .days {
+    .box {
       display: inline-block;
       height: 60px;
       width: 60px;
@@ -23,15 +23,15 @@
       border-radius: 6px;
     }
 
-    .months {
+    .months-box {
       background: #FDEBEC;
     }
 
-    .weeks {
+    .weeks-box {
       background: #FBEBDD;
     }
 
-    .days {
+    .days-box {
       background: #FCF3DB;
     }
 
@@ -46,7 +46,7 @@
 
     .numbers {
       font-family: 'GFS Didot', serif;
-      color: #37352f;
+      color: #373530;
       font-size: 3.3em;
     }
   </style>
@@ -56,15 +56,15 @@
 <h2>B A C K&nbsp;&nbsp;&nbsp;T O&nbsp;&nbsp;&nbsp;S C H O O L</h2>
 
 <div id="timer">
-  <div class="months">
+  <div class="box months-box">
     <div id="months" class="numbers"></div>
     <div>months</div>
   </div>
-  <div class="weeks">
+  <div class="box weeks-box">
     <div id="weeks" class="numbers"></div>
     <div>weeks</div>
   </div>
-  <div class="days">
+  <div class="box days-box">
     <div id="days" class="numbers"></div>
     <div>days</div>
   </div>
