@@ -28,11 +28,11 @@
     }
 
     .weeks {
-      background: #FAECDD;
+      background: #FBEBDD;
     }
 
     .days {
-      background: #FBF3DB;
+      background: #FCF3DB;
     }
 
     #timer {
@@ -111,6 +111,9 @@
     document.getElementById("weeks").textContent = weeks;
     document.getElementById("days").textContent = days;
   }
+
+// Run once immediately
+  updateCountdown();
 
   // Calculate milliseconds until next midnight
   const now = new Date();
