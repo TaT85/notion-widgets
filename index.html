@@ -7,7 +7,7 @@
   <title>COUNTER</title>
   <style>
     h2 {
-      color:#37352f;
+      color:#373530;
       text-align: center;
       text-transform: uppercase;
       margin: 0px 0px 5px;
@@ -15,7 +15,7 @@
       font-size: 1em;
     }
 
-    .weeks, .days, .hours {
+    .months, .weeks, .days {
       display: inline-block;
       height: 60px;
       width: 60px;
@@ -23,15 +23,15 @@
       border-radius: 6px;
     }
 
-    .weeks {
+    .months {
       background: #FDEBEC;
     }
 
-    .days {
+    .weeks {
       background: #FAECDD;
     }
 
-    .hours {
+    .days {
       background: #FBF3DB;
     }
 
@@ -56,15 +56,15 @@
 <h2>B A C K&nbsp;&nbsp;&nbsp;T O&nbsp;&nbsp;&nbsp;S C H O O L</h2>
 
 <div id="timer">
-  <div class="weeks">
+  <div class="months">
     <div id="months" class="numbers"></div>
     <div>months</div>
   </div>
-  <div class="days">
+  <div class="weeks">
     <div id="weeks" class="numbers"></div>
     <div>weeks</div>
   </div>
-  <div class="hours">
+  <div class="days">
     <div id="days" class="numbers"></div>
     <div>days</div>
   </div>
@@ -75,8 +75,6 @@
 
   function updateCountdown() {
     const now = new Date();
-
-    // Clear time parts (treat days as whole calendar units)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
 
@@ -87,31 +85,25 @@
       return;
     }
 
-    // If same calendar day
-    if (today.getDate() === target.getDate()) {
-      const monthDiff = (target.getFullYear() - today.getFullYear()) * 12 + (target.getMonth() - today.getMonth());
-      document.getElementById("months").textContent = monthDiff;
-      document.getElementById("weeks").textContent = "0";
-      document.getElementById("days").textContent = "0";
-      return;
+    let yearDiff = target.getFullYear() - today.getFullYear();
+    let monthDiff = target.getMonth() - today.getMonth();
+    let months = yearDiff * 12 + monthDiff;
+
+    // Adjust if target day is before today day in the month
+    let monthStart = new Date(today.getFullYear(), today.getMonth() + months, today.getDate());
+    if (monthStart > target) {
+      months--;
+      monthStart = new Date(today.getFullYear(), today.getMonth() + months, today.getDate());
     }
 
-    // Count full calendar months
-    let tempDate = new Date(today);
-    let months = 0;
-
-    while (new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate()) <= target) {
-      tempDate.setMonth(tempDate.getMonth() + 1);
-      months++;
+    // Handle overflow (e.g., Feb 30 doesn't exist)
+    if (monthStart.getDate() !== today.getDate()) {
+      monthStart = new Date(monthStart.getFullYear(), monthStart.getMonth(), 0); // last valid day of that month
     }
 
-    // Remove time again for consistency
-    const tempDateOnly = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate());
-    const targetDateOnly = new Date(target.getFullYear(), target.getMonth(), target.getDate());
-
-    const remainingDays = Math.round(
-      (targetDateOnly - tempDateOnly) / (1000 * 60 * 60 * 24)
-    );
+    // Calculate remaining days
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const remainingDays = Math.round((target - monthStart) / msPerDay);
     const weeks = Math.floor(remainingDays / 7);
     const days = remainingDays % 7;
 
@@ -120,8 +112,16 @@
     document.getElementById("days").textContent = days;
   }
 
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  // Calculate milliseconds until next midnight
+  const now = new Date();
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const msUntilMidnight = nextMidnight - now;
+
+  // Set timeout to run at midnight, then update daily
+  setTimeout(() => {
+    updateCountdown(); // run at midnight
+    setInterval(updateCountdown, 86400000); // repeat every 24 hours
+  }, msUntilMidnight);
 </script>
 
 </body>
